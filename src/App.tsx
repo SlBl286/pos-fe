@@ -1,21 +1,24 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
-import { ThemeProvider } from "./components/theme-provider";
-import { ModeToggle } from "./components/mode-toggle";
 import { Outlet } from "react-router-dom";
+import { cn } from "./lib/utils";
+import Sidebar from "./components/sidebar";
+import Header from "./components/header";
 
 export default function App() {
   return (
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <SidebarProvider>
-        <AppSidebar />
-        <main>
-          <SidebarTrigger />
-        </main>
-      </SidebarProvider>
-      <div id="main-content" className="h-screen w-[1000px]">
-          <Outlet/>
+    <div className="flex w-screen">
+      <div className="flex-none w-52 h-screen">
+       <Sidebar/>
       </div>
-    </ThemeProvider>
+      <div className="flex-1 h-screen grow ">
+
+        <Header/>
+        <div className={cn("w")}>
+          <Outlet />
+        </div>
+      </div>
+      <div className="flex-none w-96 h-screen">
+       <Sidebar/>
+      </div>
+    </div>
   );
 }

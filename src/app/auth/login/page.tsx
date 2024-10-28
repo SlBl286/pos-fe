@@ -1,9 +1,22 @@
-import { Button } from "../components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/hooks/use-auth";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-function Login() {
+function LoginPage() {
+  const [searchParams] = useSearchParams();
+  const {login} = useAuth();
+  const onSubmit = () => {
+    login(searchParams.get("backUrl") ?? "/");
+  };
   return (
     <div className="flex justify-center items-center w-screen h-screen">
       <Card className="w-[400px]">
@@ -25,8 +38,8 @@ function Login() {
           </form>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button className="w-full" variant={"default"}>
-              Đăng nhập
+          <Button className="w-full" variant={"default"} onClick={onSubmit}>
+            Đăng nhập
           </Button>
         </CardFooter>
       </Card>
@@ -34,4 +47,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginPage;
