@@ -1,15 +1,15 @@
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 
 
-function Bills() {
+function BillPage() {
   return (
     <div className="flex justify-center items-center w-screen h-screen">
       <Card className="w-[400px]">
         <CardHeader>
-          <CardTitle>aaaa </CardTitle>
+          <CardTitle> </CardTitle>
         </CardHeader>
         <CardContent>
-            HH
+            
         </CardContent>
        
       </Card>
@@ -17,4 +17,4 @@ function Bills() {
   );
 }
 
-export default Bills;
+export default BillPage;

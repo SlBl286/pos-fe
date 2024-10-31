@@ -1,15 +1,21 @@
+import { create } from "zustand";
 
+type SidebarStore = {
+  isOpen: boolean;
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+};
 
-import { useState } from "react";
-
-export function useMobileSidebar() {
-    const [isOpen,setIsOpen] = useState(false);
-    const toggle = () => {
-        setIsOpen(!isOpen);
-      };
-
-  return {
-    isOpen,
-    toggle
-  }
-}
+export const useSidebar = create<SidebarStore>((set) => ({
+  isOpen: false,
+  open: () => {
+    set(() => ({ isOpen: true }));
+  },
+  close: () => {
+    set(() => ({ isOpen: false }));
+  },
+  toggle: () => {
+    set((state) => ({ isOpen: !state.isOpen }));
+  },
+}));

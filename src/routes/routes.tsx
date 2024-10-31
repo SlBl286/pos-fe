@@ -4,6 +4,8 @@ import Login from "@/app/auth/login/page";
 import { createBrowserRouter, redirect } from "react-router-dom";
 import NotFoundPage from "@/app/error/not-found";
 import UserNamePage from "@/app/user/user-name";
+import BillPage from "@/app/bill/page";
+import ItemPage from "@/app/items/page";
 
 export const router = createBrowserRouter([
   {
@@ -19,9 +21,20 @@ export const router = createBrowserRouter([
     },
     children: [
       {
-        path: "dashboard",
-
+        path: "",
         element: <Dashboard />,
+      },
+      {
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "items",
+        element: <ItemPage />,
+      },
+      {
+        path: "bills",
+        element: <BillPage />,
       },
       {
         path: "user/:username",

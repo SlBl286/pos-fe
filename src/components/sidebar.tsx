@@ -13,12 +13,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   BadgeCheck,
   Bell,
-  ChevronsUpDown,
   CreditCard,
   LogOut,
   Sparkles,
 } from "lucide-react";
-import { Button } from "./ui/button";
 
 export function Sidebar() {
   const { logout } = useAuth();
