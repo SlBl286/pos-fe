@@ -13,7 +13,6 @@ export const router = createBrowserRouter([
     element: <App />,
     loader: async () => {
       const isLogin = JSON.parse(localStorage.getItem("isLogin") ?? "false");
-      console.log(isLogin);
       if (!isLogin)
         throw redirect("/login?backUrl=" + window.location.pathname);
 
@@ -46,7 +45,6 @@ export const router = createBrowserRouter([
     path: "login",
     loader: async () => {
       const isLogin = JSON.parse(localStorage.getItem("isLogin") ?? "false");
-      console.log(isLogin);
       if (isLogin) throw redirect("/");
 
       return isLogin;
