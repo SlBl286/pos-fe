@@ -9,9 +9,10 @@ interface SidebarItemProps {
   name: string;
   expanded: boolean;
   link: string;
+  isActive? : boolean;
 }
 
-export function SidebarItem({ Icon, name, expanded, link }: SidebarItemProps) {
+export function SidebarItem({ Icon, name, expanded, link,isActive = true }: SidebarItemProps) {
   const navigate = useNavigate();
   const onClick = () => {
     navigate(link);
@@ -19,14 +20,15 @@ export function SidebarItem({ Icon, name, expanded, link }: SidebarItemProps) {
   return (
     <div
       className={cn(
+        isActive && "shadow-sm",
         expanded && " w-full px-5",
-        "flex items-center content-center space-x-1 mt-4"
+        "flex flex-row items-start justify-start  content-start space-x-1 mt-4"
       )}
     >
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" className="h-10 w-full" onClick={onClick}>
+            <Button variant="ghost" className="h-10 w-full flex justify-start" onClick={onClick}>
               <Icon className="h-11 w-11" />
               {expanded && (
                 <span className="text-base font-medium">{name}</span>

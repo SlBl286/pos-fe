@@ -1,32 +1,33 @@
-
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner"
+import { toast } from "sonner";
 import api from "../api";
-
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@/config";
+import { User } from "@/types/user";
 
 export const uselogin = () => {
-    const navigate = useNavigate();
-    const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
-    const mutation = useMutation({
-        mutationFn: async (json) => {
-            const respone = await api.post("/login",json)
-            if(respone.statusText !== "ok") {
-                throw new Error("Failed to log in")
-              }
-            return await respone.data
-        },
-        onSuccess: () => {
-            toast.success("Logged in")
-            navigate(0);
-            queryClient.invalidateQueries({ queryKey: ["current"] })
+  const mutation = useMutation({
+    mutationFn: async ({ json }: any) => {
+      const respone = await api.post<User>("/login", json);
+      console.log(respone);
+      if (respone.statusText !== "OK") {
+        throw new Error("Failed to log in");
+      }
+      localStorage.setItem(ACCESS_TOKEN_KEY, respone.data.token);
+      localStorage.setItem(REFRESH_TOKEN_KEY, respone.data.refreshToken);
 
-        },
-        onError: ()=> {
-            toast.error("Failed to log in.")
-        }
-    })
+      return respone.data.token;
+    },
+    onSuccess: () => {
+      toast.success("Logged in");
+      navigate(0);
+    },
+    onError: () => {
+      toast.error("Failed to log in.");
+    },
+  });
 
-    return mutation;
-}
+  return mutation;
+};

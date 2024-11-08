@@ -6,17 +6,18 @@ import NotFoundPage from "@/app/error/not-found";
 import UserNamePage from "@/app/user/user-name";
 import BillPage from "@/app/bill/page";
 import ItemPage from "@/app/items/page";
+import { ACCESS_TOKEN_KEY } from "@/config";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     loader: async () => {
-      const isLogin = JSON.parse(localStorage.getItem("isLogin") ?? "false");
-      if (!isLogin)
+      const token = localStorage.getItem(ACCESS_TOKEN_KEY) ;
+      if (!token)
         throw redirect("/login?backUrl=" + window.location.pathname);
 
-      return isLogin;
+      return !!token;
     },
     children: [
       {
@@ -44,10 +45,10 @@ export const router = createBrowserRouter([
   {
     path: "login",
     loader: async () => {
-      const isLogin = JSON.parse(localStorage.getItem("isLogin") ?? "false");
-      if (isLogin) throw redirect("/");
+      const token = localStorage.getItem(ACCESS_TOKEN_KEY) ;
+      if (!!token) throw redirect("/");
 
-      return isLogin;
+      return !!token;
     },
     element: <Login />,
   },

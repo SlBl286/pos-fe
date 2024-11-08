@@ -1,51 +1,92 @@
+"use client"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useAuth } from "@/hooks/use-auth";
-import {  useSearchParams } from "react-router-dom";
-
+import { useSearchParams } from "react-router-dom";
+import { loginSchema } from "@/features/auth/schema";
+import { uselogin } from "@/api/auth/use-login";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 function LoginPage() {
   const [searchParams] = useSearchParams();
-  const {login} = useAuth();
-  const onSubmit = () => {
-    login({username: "qy286",password: "22021987"},searchParams.get("backUrl") ?? "/");
+  const { mutate, isPending } = uselogin();
+
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
+  const onSubmit = (values: z.infer<typeof loginSchema>) => {
+    mutate(
+      { json : values},
+    );
   };
+
   return (
     <div className="flex justify-center items-center w-screen h-screen">
       <div className="fixed top-4 right-4">
-    <ModeToggle/>
+        <ModeToggle />
       </div>
       <Card className="w-[400px]">
         <CardHeader className="flex justify-center items-center">
           <CardTitle className="text-2xl font-semibold">Đăng Nhập</CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Tài khoản</Label>
-                <Input id="name" placeholder="Tên tài khoản" />
-              </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Mật khẩu</Label>
-                <Input id="password" placeholder="******" />
-              </div>
+        <Form {...form} >
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="flex flex-col gap-y-4">
+              <FormField
+                control={form.control}
+                name="username"
+                disabled={isPending}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Enter username" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                disabled={isPending}
+                render={({ field }) => (
+                  <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Enter password" type={"password"} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Button
+                type="submit"
+                size={"lg"}
+                variant={"primary"}
+                disabled={isPending}
+              >
+                Login
+              </Button>
             </div>
           </form>
+        </Form>
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <Button className="w-full" variant={"primary"} onClick={onSubmit}>
-            Đăng nhập
-          </Button>
-        </CardFooter>
       </Card>
     </div>
   );

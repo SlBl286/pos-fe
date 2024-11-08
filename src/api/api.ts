@@ -1,3 +1,4 @@
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@/config";
 import axios, { AxiosError, AxiosResponse } from "axios";
 
 const api = axios.create({
@@ -11,7 +12,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config: any) => {
-  const token = localStorage.getItem("ACCESS_TOKEN");
+  const token = localStorage.getItem(ACCESS_TOKEN_KEY);
   config.headers = config.headers || {};
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -27,7 +28,7 @@ api.interceptors.response.use(
     try {
       const { response } = error;
       if (response?.status === 401) {
-        localStorage.removeItem("ACCESS_TOKEN");
+        localStorage.removeItem(ACCESS_TOKEN_KEY);
       }
     } catch (e) {
       console.error(e);
@@ -41,11 +42,11 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const refreshToken = localStorage.getItem("REFRESH_TOKEN");
+      const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
       const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/refresh`, {
         token: refreshToken,
       });
-      localStorage.setItem("token", data.token);
+      localStorage.setItem(ACCESS_TOKEN_KEY, data.token);
       api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
       return api(originalRequest);
     }

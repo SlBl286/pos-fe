@@ -23,19 +23,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { useAuth } from "@/hooks/use-auth";
+import { useLogout } from "@/api/auth/use-logout";
+import { useCurrent } from "@/api/auth/use-current";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function Sidebar({ className, ...props }: SidebarProps) {
-  const user = {
-    name: "Test",
-  };
+  const {data:user} = useCurrent();
+  if(!user){
+
+  }
   const [expanded, setExpanded] = React.useState(false);
   const toggleSidebar = () => {
     setExpanded(!expanded);
   };
-  const {logout} = useAuth();
+  const { mutate,isPending } = useLogout();
   return (
     <div
       className={cn(
@@ -113,7 +115,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              {expanded && <span className="font-medium">{user.name}</span>}
+              {expanded && <span className="font-medium">{user?.username}</span>}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -121,7 +123,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
             <DropdownMenuSeparator />
             <DropdownMenuItem>Thông tin cá nhân</DropdownMenuItem>
             <DropdownMenuItem>Bảo mật</DropdownMenuItem>
-            <DropdownMenuItem onClick={()=>{logout()}}>Đăng xuất</DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>{mutate()}} disabled={isPending}>Đăng xuất</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
