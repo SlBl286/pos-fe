@@ -1,36 +1,43 @@
-import App from "@/App";
-import Dashboard from "@/app/dashboard/page";
 import Login from "@/app/auth/login/page";
 import { createBrowserRouter, redirect } from "react-router-dom";
 import NotFoundPage from "@/app/error/not-found";
-import UserNamePage from "@/app/user/user-name";
-import BillPage from "@/app/bill/page";
-import ItemPage from "@/app/items/page";
+
 import { ACCESS_TOKEN_KEY } from "@/config";
+
+import AuthLayout from "@/app/auth/layout";
+import MainLayout from "@/app/main/MainLayout";
+import DashboardPage from "@/app/main/dashboard/page";
+import ItemPage from "@/app/main/items/page";
+import ItemCategoryPage from "@/app/main/itemCategory/page";
+import BillPage from "@/app/main/bill/page";
+import UserNamePage from "@/app/main/user/user-name";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <MainLayout />,
     loader: async () => {
-      const token = localStorage.getItem(ACCESS_TOKEN_KEY) ;
-      if (!token)
-        throw redirect("/login?backUrl=" + window.location.pathname);
+      const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+      if (!token) throw redirect("/auth/login?backUrl=" + window.location.pathname);
 
       return !!token;
     },
     children: [
       {
         path: "",
-        element: <Dashboard />,
+        element: <DashboardPage />,
       },
       {
         path: "dashboard",
-        element: <Dashboard />,
+        element: <DashboardPage />,
       },
       {
         path: "items",
         element: <ItemPage />,
+      },
+      {
+        path: "itemCategory",
+        element: <ItemCategoryPage />,
       },
       {
         path: "bills",
@@ -43,14 +50,20 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "login",
+    path: "auth",
     loader: async () => {
-      const token = localStorage.getItem(ACCESS_TOKEN_KEY) ;
+      const token = localStorage.getItem(ACCESS_TOKEN_KEY);
       if (!!token) throw redirect("/");
 
       return !!token;
     },
-    element: <Login />,
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "login",
+        element: <Login />,
+      },
+    ],
   },
   {
     path: "*",

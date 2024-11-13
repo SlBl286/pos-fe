@@ -1,22 +1,33 @@
-import {  Search } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
-import { Input } from "./ui/input";
-import {  useSidebar } from "@/hooks/use-sidebar";
+import { Button } from "./ui/button";
+import { useSidebar } from "@/hooks/use-sidebar";
+import { Separator } from "./ui/separator";
 
 export function Header() {
-  const isOpen = useSidebar((state) => state.isOpen);
+  const { isOpen, toggle } = useSidebar();
+
   return (
-    <div className="flex justify-between p-3 ">
-      <div className="flex w-full">
-        <div className=" w-1/4 min-w-56">
-          <div className="relative">
-            <Search className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search..." className="pl-8" />
-          </div>
+    <div className=" flex flex-col">
+      <div className="flex justify-between p-3 ">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={toggle}
+          aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
+        >
+          {isOpen ? (
+            <ChevronLeft className="h-5 w-5" />
+          ) : (
+            <ChevronRight className="h-5 w-5" />
+          )}
+        </Button>
+        <div className="flex gap-4 ">
+          <ModeToggle />
         </div>
       </div>
-      <div className="flex gap-4 ">
-        <ModeToggle />
+      <div className="px-4">
+        <Separator />
       </div>
     </div>
   );
