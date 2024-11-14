@@ -1,23 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import api from "../../../api/api";
 import { ItemCategories } from "../types";
-type UseGetItemCategoriesProps = {
-  keyword: string | null;
-  page: number;
-  pageSize: number;
-};
-export const useGetItemCategories = ({
-  keyword,
-  page,
-  pageSize,
-}: UseGetItemCategoriesProps) => {
-  const query = useQuery({
-    queryKey: ["itemCategories", keyword],
+
+export const useGetItemCategories = () => {
+  const query = useQuery<any,Error,ItemCategories>({
+    queryKey: ["itemCategories"],
     queryFn: async () => {
       try {
-        const respone = await api.get<ItemCategories>("/itemCategories", {
-          params: { keyword,page,pageSize },
-        });
+        const respone = await api.get<ItemCategories>("/itemCategories");
         if (respone.status !== 200) {
           return null;
         }

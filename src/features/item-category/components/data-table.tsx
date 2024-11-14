@@ -1,13 +1,4 @@
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
   Table,
   TableBody,
   TableCell,
@@ -16,35 +7,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  ColumnDef,
   flexRender,
-  getCoreRowModel,
-  useReactTable,
+  Table as DTable,
 } from "@tanstack/react-table";
+type DataTableProps<TData,> = {
+  table : DTable<TData>
+}
 
-type DataTableProps<TData, TValue> = {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  total: number;
-  pageCount : number;
-  pageIndex : number;
-};
-
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-  total,
-  pageCount
-}: DataTableProps<TData, TValue>) {
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    manualFiltering: true,
-    rowCount : total,
-    pageCount : pageCount,
-  });
-
+export function DataTable<TData>({table}:DataTableProps<TData> ) {
   return (
     <div>
       <div>
@@ -81,7 +51,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={table._getColumnDefs.length}
                   className="h-24 text-center"
                 >
                   Không có dữ liệu
@@ -91,40 +61,6 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <Pagination className="flex justify-end">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious onClick={() => table.previousPage()} />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext onClick={() => table.nextPage()} />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-      {/* <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
-      </div> */}
     </div>
   );
 }
